@@ -34,7 +34,7 @@ def create_distance_matrix(locations):
     for i in range(n):
         for j in range(n):
             if i != j:
-                dist = haversine_distance(locations[i][1:], locations[j][1:])
+                dist = haversine_distance(locations[i][1], locations[j][1])
                 matrix[i][j] = int(dist * 1000)  # Convert to meters (int)
 
     return matrix
@@ -58,7 +58,10 @@ def solve_multi_trip_vrp(candidates, depot_coords=(39.7392, -104.9903)):
     """
 
     # Build location list: depot + all candidates
-    locations = [('Denver', depot_coords)] + candidates
+    # Ensure consistent format: (name, (lat, lon))
+    locations = [('Denver', depot_coords)]
+    for name, lat, lon in candidates:
+        locations.append((name, (lat, lon)))
     num_locations = len(locations)
 
     # Create distance matrix
